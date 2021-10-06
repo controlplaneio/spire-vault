@@ -1,0 +1,7 @@
+---
+server:
+  service:
+    type: NodePort
+    nodePort: 30000
+  dev:
+    enabled: true

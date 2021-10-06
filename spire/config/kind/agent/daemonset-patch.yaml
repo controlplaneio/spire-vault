@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: spire-agent
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "spire-agent"
+        vault.hashicorp.com/agent-copy-volume-mounts: spire-agent
+        vault.hashicorp.com/auth-config-token-path: /var/run/secrets/tokens/vault-token
+        vault.hashicorp.com/agent-inject-secret-ca.crt: "spiffe/issue/spire-agent"
+        vault.hashicorp.com/agent-inject-template-ca.crt: |
+          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
+          {{ .Data.issuing_ca }}
+          {{- end }}
+        vault.hashicorp.com/agent-inject-secret-tls.key: "spiffe/issue/spire-agent"
+        vault.hashicorp.com/agent-inject-template-tls.key: |
+          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
+          {{ .Data.private_key }}
+          {{- end }}
+        vault.hashicorp.com/agent-inject-secret-tls.crt: "spiffe/issue/spire-agent"
+        vault.hashicorp.com/agent-inject-template-tls.crt: |
+          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
+          {{ .Data.certificate }}
+          {{- end }}
+    spec:
+      initContainers:
+        - name: init
+          image: gcr.io/spiffe-io/wait-for-it
+          args:
+            - -t
+            - "30"
+            - spire-server:8081
+      containers:
+        - name: spire-agent
+          volumeMounts:
+            - mountPath: /var/run/secrets/tokens
+              name: vault-token
+      volumes:
+        - name: vault-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: vault-token
+                  audience: vault
+                  expirationSeconds: 900

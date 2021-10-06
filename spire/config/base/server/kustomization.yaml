@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: spire
+commonLabels:
+  app.kubernetes.io/name: spire-server
+  app.kubernetes.io/version: 1.0.2
+  app.kubernetes.io/component: server
+  app.kubernetes.io/part-of: spire
+generatorOptions:
+  disableNameSuffixHash: true
+resources:
+  - sa.yaml
+  - deployment.yaml
+  - service.yaml
