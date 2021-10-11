@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: svc
+    spec:
+      serviceAccountName: svc
+      containers:
+        - name: svc
+          image: gcr.io/spiffe-io/spire-agent:1.0.2
+          imagePullPolicy: IfNotPresent
+          command:
+            - sleep
+          args:
+            - "1000000000"
+          volumeMounts:
+            - name: spire-agent-socket
+              mountPath: /run/spire/sockets
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: spire-agent-socket
+          hostPath:
+            path: /run/spire/sockets
+            type: Directory

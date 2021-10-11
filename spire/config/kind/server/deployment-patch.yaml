@@ -14,7 +14,7 @@ spec:
             - sh
           args:
             - -c
-            - curl http://vault.vault.svc:8200/v1/spiffe/ca/pem -o /run/secrets/ca/ca.pem
+            - curl -k https://vault.vault.svc:8200/v1/spiffe/ca/pem -o /run/secrets/ca/ca.pem
           volumeMounts:
             - mountPath: /run/secrets/ca
               name: ca-crt

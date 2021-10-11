@@ -1,7 +1,7 @@
 server {
   bind_address = "0.0.0.0"
   bind_port = "8081"
-  socket_path = "/tmp/spire-server/private/api.sock"
+//  socket_path = "/tmp/spire-server/private/api.sock"
   trust_domain = "controlplane.io"
   data_dir = "/run/spire/data"
   log_level = "DEBUG"
@@ -41,7 +41,8 @@ plugins {
 
   UpstreamAuthority "vault" {
     plugin_data {
-      vault_addr = "http://vault.vault.svc:8200"
+      vault_addr = "https://vault.vault.svc:8200"
+      insecure_skip_verify = true
       pki_mount_point = "spiffe"
       k8s_auth {
         k8s_auth_role_name = "spire-server"

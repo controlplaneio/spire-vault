@@ -1,0 +1,17 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-certificate
+  namespace: vault
+spec:
+  secretName: vault-tls
+  issuerRef:
+    name: vault-issuer
+    kind: Issuer
+    group: cert-manager.io
+  commonName: vault-internal
+  dnsNames:
+    - vault-0.vault-internal
+  ipAddresses:
+    - 127.0.0.1

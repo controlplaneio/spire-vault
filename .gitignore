@@ -1,3 +1,5 @@
 .idea/
 Pipfile
 kubeconfig
+ca.pem
+init.json

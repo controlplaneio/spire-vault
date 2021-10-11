@@ -1,7 +1,30 @@
 ---
+global:
+  tlsDisable: false
 server:
+  extraEnvironmentVars:
+    VAULT_CACERT: /var/run/secrets/tls/ca.crt
+  volumes:
+    - name: vault-tls
+      secret:
+        secretName: vault-tls
+  volumeMounts:
+    - name: vault-tls
+      mountPath: /var/run/secrets/tls
+      readOnly: true
   service:
     type: NodePort
     nodePort: 30000
-  dev:
+  standalone:
     enabled: true
+    config: |
+      ui = true
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_cert_file = "/var/run/secrets/tls/tls.crt"
+        tls_key_file = "/var/run/secrets/tls/tls.key"
+      }
+      storage "file" {
+        path = "/vault/data"
+      }
