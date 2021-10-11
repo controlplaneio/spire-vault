@@ -3,27 +3,21 @@
 Example configuration for integrating [Spire](https://spiffe.io/docs/latest/spire-about/) with
 [Vault](https://www.vaultproject.io/).
 
-* Vault has a Spiffe Root CA
-* the Spire server uses Vault as an
-[Upstream Authority]https://github.com/spiffe/spire/blob/v1.0.2/doc/plugin_server_upstreamauthority_vault.md to sign
-it's root certificate
-* the Spire server and agent use x509 Certificates issued by Vault for Node Attestation
-  * [server](https://github.com/spiffe/spire/blob/v1.0.2/doc/plugin_server_upstreamauthority_vault.md)
-  * [agent](https://github.com/spiffe/spire/blob/v1.0.2/doc/plugin_agent_nodeattestor_x509pop.md)
+* Using Vault as an Upstream CA for the Spire Server.
+* Using Vault to issue x509 Certificates to Spire Agents for Node Attestation.
+* Using Spire issued x509 SVIDs for Workloads to login to Vault.
 
-Launch the Kind cluster and deploy Vault
+## Steps
 
-```shell
-make create-cluster deploy-vault
-```
-
-Wait for Vault to come up and then configure Vault and launch Spire server and agent
+1. Bring up the custer and deploy everything
+2. Register the workloads
+3. Login to vault
 
 ```shell
-make configure-vault deploy-spire-server deploy-spire-agent
+make all
+make register-workloads
+make login-vault-svc-a
 ```
-
-The agent will attest to the server and get the id `spiffe://controlplane.io/spire/agent/cn/spire-agent.controlplane.io`
 
 Cleanup
 
