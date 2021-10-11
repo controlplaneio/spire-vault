@@ -4,11 +4,13 @@ export VAULT_SKIP_VERIFY=true
 export VAULT_ADDR=https://localhost:30000
 export VAULT_TOKEN=$(cat init.json | jq -r .root_token)
 
+HOST_IP=$(hostname -I | cut -d' ' -f1)
+
 vault secrets enable -path spiffe pki
 vault secrets tune -max-lease-ttl=8760h spiffe
 vault write spiffe/config/urls \
-  issuing_certificates="https://$HOST_IP:30000/v1/spiffe/ca" \
-  crl_distribution_points="https://$HOST_IP:30000/v1/spiffe/crl"
+	issuing_certificates=https://$HOST_IP:30000/v1/spiffe/ca \
+  crl_distribution_points=https://$HOST_IP:30000/v1/spiffe/crl
 
 vault write -field certificate spiffe/root/generate/internal \
   common_name=controlplane.io \

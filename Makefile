@@ -1,9 +1,11 @@
 KUBECONFIG ?= ./kubeconfig
 
 SHELL := /bin/bash
-HOST_IP := $$(hostname -I | cut -d' ' -f1)
 
 .EXPORT_ALL_VARIABLES:
+
+echo:
+	./vault/configure-pki-secrets.sh
 
 #
 # Kind
