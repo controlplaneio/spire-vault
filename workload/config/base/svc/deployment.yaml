@@ -14,17 +14,19 @@ spec:
         - name: svc
           image: gcr.io/spiffe-io/spire-agent:1.0.2
           imagePullPolicy: IfNotPresent
+          env:
+            - name: SPIFFE_ENDPOINT_SOCKET
+              value: unix:///spire-agent-socket/agent.sock
           command:
             - sleep
           args:
             - "1000000000"
           volumeMounts:
             - name: spire-agent-socket
-              mountPath: /run/spire/sockets
+              mountPath: /spire-agent-socket
               readOnly: true
       restartPolicy: Always
       volumes:
         - name: spire-agent-socket
-          hostPath:
-            path: /run/spire/sockets
-            type: Directory
+          csi:
+            driver: "csi.spiffe.io"

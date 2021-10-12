@@ -4,9 +4,6 @@ SHELL := /bin/bash
 
 .EXPORT_ALL_VARIABLES:
 
-echo:
-	./vault/configure-pki-secrets.sh
-
 #
 # Kind
 #
@@ -65,6 +62,8 @@ display-ca-crt:
 # Spire
 #
 
+.PHONY: logs-spire-server logs-spire-agent
+
 deploy-spire-%:
 	kubectl apply -k spire/config/kind/$*
 
@@ -73,8 +72,11 @@ deploy-spire: deploy-spire-server deploy-spire-agent
 delete-spire-%:
 	kubectl delete -k spire/config/kind/$*
 
-logs-spire-%:
-	kubectl -n spire logs $$(kubectl -n spire get po -l=app.kubernetes.io/component=$* -oname)
+logs-spire-server:
+	kubectl -n spire logs $$(kubectl -n spire get po -l=app.kubernetes.io/component=server -oname)
+
+logs-spire-agent:
+	kubectl -n spire logs -c spire-agent $$(kubectl -n spire get po -l=app.kubernetes.io/component=agent -oname)
 
 #
 # Workload
@@ -104,11 +106,11 @@ register-workloads: register-workload-svc-a register-workload-svc-b
 
 healthcheck-%:
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- \
-		./bin/spire-agent healthcheck -socketPath /run/spire/sockets/agent.sock
+		./bin/spire-agent healthcheck -socketPath /spire-agent-socket/agent.sock
 
-fetch-%: ## creates /tmp/{svid.0.key,svid.0.pem,bundle.0.pem}
+fetch-svid-%: ## creates /tmp/{svid.0.key,svid.0.pem,bundle.0.pem}
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- \
-		./bin/spire-agent api fetch -socketPath /run/spire/sockets/agent.sock -write /tmp
+		./bin/spire-agent api fetch -socketPath /spire-agent-socket/agent.sock -write /tmp
 
 login-vault-%:
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- apk add openssl curl jq
