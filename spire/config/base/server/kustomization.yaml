@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: spire
 commonLabels:
   app.kubernetes.io/name: spire-server
-  app.kubernetes.io/version: 1.0.2
+  app.kubernetes.io/version: 1.1.0
   app.kubernetes.io/component: server
   app.kubernetes.io/part-of: spire
 generatorOptions:

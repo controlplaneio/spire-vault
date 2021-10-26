@@ -12,7 +12,7 @@ spec:
       serviceAccountName: spire-agent
       containers:
         - name: spire-agent
-          image: gcr.io/spiffe-io/spire-agent:1.0.2
+          image: gcr.io/spiffe-io/spire-agent:1.1.0
           args:
             - -config
             - /run/spire/config/agent.hcl
