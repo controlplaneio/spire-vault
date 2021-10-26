@@ -115,7 +115,7 @@ fetch-svid-%: ## creates /tmp/{svid.0.key,svid.0.pem,bundle.0.pem}
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- \
 		./bin/spire-agent api fetch -socketPath /spire-agent-socket/agent.sock -write /tmp
 
-fetch-svds: fetch-svid-svc-a fetch-svid-svc-a
+fetch-svids: fetch-svid-svc-a fetch-svid-svc-b
 
 login-vault-%:
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- apk add openssl curl jq
