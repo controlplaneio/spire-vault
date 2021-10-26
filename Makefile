@@ -10,6 +10,9 @@ SHELL := /bin/bash
 
 all: create-cluster deploy-cert-manager deploy-vault configure-vault deploy-spire deploy-workloads
 
+.PHONY: infra
+infra: create-cluster deploy-cert-manager deploy-vault
+
 .PHONY: create-cluster delete-cluster
 
 create-cluster:
@@ -73,10 +76,10 @@ delete-spire-%:
 	kubectl delete -k spire/config/kind/$*
 
 logs-spire-server:
-	kubectl -n spire logs $$(kubectl -n spire get po -l=app.kubernetes.io/component=server -oname)
+	kubectl -n spire logs -l=app.kubernetes.io/component=server -oname
 
 logs-spire-agent:
-	kubectl -n spire logs -c spire-agent $$(kubectl -n spire get po -l=app.kubernetes.io/component=agent -oname)
+	kubectl -n spire logs -l=app.kubernetes.io/component=agent -oname
 
 #
 # Workload
@@ -111,6 +114,8 @@ healthcheck-%:
 fetch-svid-%: ## creates /tmp/{svid.0.key,svid.0.pem,bundle.0.pem}
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- \
 		./bin/spire-agent api fetch -socketPath /spire-agent-socket/agent.sock -write /tmp
+
+fetch-svds: fetch-svid-svc-a fetch-svid-svc-a
 
 login-vault-%:
 	kubectl exec $$(kubectl get po -l=app.kubernetes.io/name=$* -oname) -- apk add openssl curl jq
