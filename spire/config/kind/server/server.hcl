@@ -1,7 +1,6 @@
 server {
   bind_address = "0.0.0.0"
   bind_port = "8081"
-//  socket_path = "/tmp/spire-server/private/api.sock"
   trust_domain = "controlplane.io"
   data_dir = "/run/spire/data"
   log_level = "DEBUG"
