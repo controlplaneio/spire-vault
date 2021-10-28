@@ -6,5 +6,5 @@ In order to utilise TLS Certificate Authentication we need to enable TLS and the
 and configured in [values.yaml](../vault/values.yaml).
 
 Vault is then [initialised and unsealed](../vault/init-unseal.sh) with the initialisation response piped to
-[init.json](../init.json) to used to unseal, further configuration and accessing Vault through the
+[init.json](../init.json) and used to unseal, apply further configuration and accessing Vault through the
 [NodePort](https://localhost:30000).
