@@ -76,10 +76,10 @@ delete-spire-%:
 	kubectl delete -k spire/config/kind/$*
 
 logs-spire-server:
-	kubectl -n spire logs -l=app.kubernetes.io/component=server -oname
+	kubectl -n spire logs -l=app.kubernetes.io/component=server
 
 logs-spire-agent:
-	kubectl -n spire logs -l=app.kubernetes.io/component=agent -oname
+	kubectl -n spire logs -l=app.kubernetes.io/component=agent -c spire-agent
 
 #
 # Workload
