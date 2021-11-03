@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  app.kubernetes.io/name: spire-agent
+  app.kubernetes.io/version: latest-local
+  app.kubernetes.io/component: agent
+  app.kubernetes.io/part-of: spire
+namespace: spire
+patchesStrategicMerge:
+  - daemonset-patch.yaml
+resources:
+  - ../agent

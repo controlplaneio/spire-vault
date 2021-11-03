@@ -124,3 +124,7 @@ login-vault-%:
 	  --key /tmp/svid.0.key \
 	  --data '{"name": "spiffe"}' \
 	  https://vault.vault.svc:8200/v1/auth/cert/login | jq
+
+load-image-spire-%:
+	$$(kind load docker-image spire-$*:latest-local --name spire-vault)
+

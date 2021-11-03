@@ -1,0 +1,12 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: spire-agent
+spec:
+  template:
+    spec:
+      containers:
+        - name: spire-agent
+          image: spire-agent:latest-local
+          imagePullPolicy: Never
