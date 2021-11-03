@@ -12,6 +12,9 @@ configMapGenerator:
   - name: spire-agent
     files:
       - agent.hcl
+  - name: vault-agent
+    files:
+      - config.hcl=vault-agent-config.hcl
 patchesStrategicMerge:
   - daemonset-patch.yaml
 resources:

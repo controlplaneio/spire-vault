@@ -7,26 +7,10 @@ spec:
   template:
     metadata:
       annotations:
-        vault.hashicorp.com/tls-skip-verify: "true"
         vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "spire-agent"
         vault.hashicorp.com/agent-copy-volume-mounts: spire-agent
-        vault.hashicorp.com/auth-config-token-path: /var/run/secrets/tokens/vault-token
-        vault.hashicorp.com/agent-inject-secret-ca.crt: "spiffe/issue/spire-agent"
-        vault.hashicorp.com/agent-inject-template-ca.crt: |
-          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
-          {{ .Data.issuing_ca }}
-          {{- end }}
-        vault.hashicorp.com/agent-inject-secret-tls.key: "spiffe/issue/spire-agent"
-        vault.hashicorp.com/agent-inject-template-tls.key: |
-          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
-          {{ .Data.private_key }}
-          {{- end }}
-        vault.hashicorp.com/agent-inject-secret-tls.crt: "spiffe/issue/spire-agent"
-        vault.hashicorp.com/agent-inject-template-tls.crt: |
-          {{- with secret "spiffe/issue/spire-agent" "common_name=spire-agent.controlplane.io" "ttl=5m" -}}
-          {{ .Data.certificate }}
-          {{- end }}
+        vault.hashicorp.com/agent-pre-populate: "false"
+        vault.hashicorp.com/agent-configmap: vault-agent
     spec:
       initContainers:
         - name: init
